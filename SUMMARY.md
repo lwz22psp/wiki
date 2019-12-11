@@ -6,7 +6,7 @@
     * [SpringBoot 2.0](ji-zhu-lei/javaxiao-zhi-shi/springboot-20.md)
       * [SpingCloudConfig](ji-zhu-lei/javaxiao-zhi-shi/springboot-20/spingcloudconfig.md)
         * [ConfigServer配置](ji-zhu-lei/javaxiao-zhi-shi/springboot-20/spingcloudconfig/configserverpei-zhi.md)
-        * ConfigClient配置
+        * [ConfigClient配置](ji-zhu-lei/javaxiao-zhi-shi/springboot-20/spingcloudconfig/configclientpei-zhi.md)
   * Docker
 * [项目](xiang-mu.md)
 * [Games](games.md)
