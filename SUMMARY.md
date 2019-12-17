@@ -8,6 +8,7 @@
         * [ConfigServer配置](ji-zhu-lei/javaxiao-zhi-shi/springboot-20/spingcloudconfig/configserverpei-zhi.md)
         * [ConfigClient配置](ji-zhu-lei/javaxiao-zhi-shi/springboot-20/spingcloudconfig/configclientpei-zhi.md)
   * [Docker](ji-zhu-lei/docker.md)
+    * [TeamCity部署](ji-zhu-lei/docker/teamcitybu-shu.md)
 * [项目](xiang-mu.md)
 * [Games](games.md)
   * [NS](games/ns.md)
