@@ -1,7 +1,10 @@
-# Summary
+# Table of contents
 
 * [首页](README.md)
 * [技术类](ji-zhu-lei.md)
+  * [算法](ji-zhu-lei/suan-fa/README.md)
+    * [排序算法](ji-zhu-lei/suan-fa/pai-xu-suan-fa/README.md)
+      * [冒泡排序](ji-zhu-lei/suan-fa/pai-xu-suan-fa/mao-pao-pai-xu.md)
   * [JAVA小知识](ji-zhu-lei/javaxiao-zhi-shi.md)
     * [Spring Boot 2.0](ji-zhu-lei/javaxiao-zhi-shi/springboot-20.md)
       * [Spring Cloud Config](ji-zhu-lei/javaxiao-zhi-shi/springboot-20/spingcloudconfig.md)
