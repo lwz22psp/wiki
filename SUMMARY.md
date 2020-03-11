@@ -16,6 +16,7 @@
     * [Redis](ji-zhu-lei/gao-bing-fa-jia-gou/redis.md)
       * [Redis数据类型](ji-zhu-lei/gao-bing-fa-jia-gou/redis/redisshu-ju-lei-xing.md)
       * [Redis缓存](ji-zhu-lei/gao-bing-fa-jia-gou/redis/redishuan-cun.md)
+      * [缓存问题](ji-zhu-lei/gao-bing-fa-jia-gou/redis/huan-cun-wen-ti.md)
 * [项目](xiang-mu.md)
 * [Games](games.md)
   * [NS](games/ns.md)
