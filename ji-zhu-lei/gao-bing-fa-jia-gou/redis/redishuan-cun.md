@@ -4,8 +4,6 @@
 
 直接通过 RedisTemplate 来使用，使用 Spring Cache 集成 Redis pom.xml 中加入以下依赖：
 
-
-
 ```
         <!--redis-->
         <dependency>
@@ -16,7 +14,6 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
-                        
 ```
 
 **spring-boot-starter-data-redis：**
@@ -42,48 +39,48 @@ spring.redis.timeout=2000
 
 ```java
 public class User implements Serializable{  
-  
+
 private static finallong serialVersionUID = 662692455422902539L;  
-  
+
 private Integer id;  
-  
+
 private String name;  
-  
+
 private Integer age;  
-  
+
 public User() {  
     }  
-  
+
 public User(Integer id, String name, Integer age) {  
 this.id = id;  
 this.name = name;  
 this.age = age;  
     }  
-  
+
 public Integer getId() {  
 return id;  
     }  
-  
+
 public void setId(Integer id) {  
 this.id = id;  
     }  
-  
+
 public String getName() {  
 return name;  
     }  
-  
+
 public void setName(String name) {  
 this.name = name;  
     }  
-  
+
 public Integer getAge() {  
 return age;  
     }  
-  
+
 public void setAge(Integer age) {  
 this.age = age;  
     }  
-  
+
 @Override  
 public String toString() {  
 return"User{" +  
@@ -91,8 +88,7 @@ return"User{" +
 ", name='" + name + '\\'' +  
 ", age=" + age +  
 '}';  
-}  
-
+}
 ```
 
 **RedisTemplate 的使用方式**
@@ -105,10 +101,10 @@ return"User{" +
 @Configuration  
 @AutoConfigureAfter(RedisAutoConfiguration.class)  
 public class RedisCacheConfig {  
-  
+
     @Bean  
 public RedisTemplate<String, Serializable> redisCacheTemplate(LettuceConnectionFactory connectionFactory) {  
-  
+
         RedisTemplate<String, Serializable> template = new RedisTemplate<>();  
 template.setKeySerializer(new StringRedisSerializer());  
 template.setValueSerializer(new GenericJackson2JsonRedisSerializer());  
@@ -124,15 +120,15 @@ test class
 @RestController  
 @RequestMapping("/user")  
 public class UserController {  
-  
+
 public static Logger logger = LogManager.getLogger(UserController.class);  
-  
+
 @Autowired  
 private StringRedisTemplate stringRedisTemplate;  
-  
+
 @Autowired  
 private RedisTemplate<String, Serializable> redisCacheTemplate;  
-  
+
 @RequestMapping("/test")  
 public void test() {  
         redisCacheTemplate.opsForValue().set("userkey", new User(1, "张三", 25));  
@@ -151,11 +147,11 @@ Spring Cache 具备很好的灵活性，不仅能够使用 SPEL（spring express
 
 ```java
 public interface UserService {  
-  
+
 User save(User user);  
-  
+
 void delete(int id);  
-  
+
 User get(Integer id);  
 }
 ```
@@ -165,17 +161,17 @@ User get(Integer id);
 ```java
 @Service  
 public class UserServiceImpl implements UserService{  
-  
+
 public static Logger logger = LogManager.getLogger(UserServiceImpl.class);  
-  
+
 privatestatic Map<Integer, User> userMap = new HashMap<>();  
 static {  
         userMap.put(1, new User(1, "肖战", 25));  
         userMap.put(2, new User(2, "王一博", 26));  
         userMap.put(3, new User(3, "杨紫", 24));  
     }  
-  
-  
+
+
 @CachePut(value ="user", key = "#user.id")  
 @Override  
 public User save(User user) {  
@@ -183,14 +179,14 @@ public User save(User user) {
         logger.info("进入save方法，当前存储对象：{}", user.toString());  
 return user;  
     }  
-  
+
 @CacheEvict(value="user", key = "#id")  
 @Override  
 public void delete(int id) {  
         userMap.remove(id);  
         logger.info("进入delete方法，删除成功");  
     }  
-  
+
 @Cacheable(value = "user", key = "#id")  
 @Override  
 public User get(Integer id) {  
@@ -214,37 +210,37 @@ return userMap.get(id);
 @RestController  
 @RequestMapping("/user")  
 public class UserController {  
-  
+
 public static Logger logger = LogManager.getLogger(UserController.class);  
-  
+
 @Autowired  
 private StringRedisTemplate stringRedisTemplate;  
-  
+
 @Autowired  
 private RedisTemplate<String, Serializable> redisCacheTemplate;  
-  
+
 @Autowired  
 private UserService userService;  
-  
+
 @RequestMapping("/test")  
 public void test() {  
         redisCacheTemplate.opsForValue().set("userkey", new User(1, "张三", 25));  
         User user = (User) redisCacheTemplate.opsForValue().get("userkey");  
         logger.info("当前获取对象：{}", user.toString());  
     }  
-  
-  
+
+
 @RequestMapping("/add")  
 public void add() {  
         User user = userService.save(new User(4, "李现", 30));  
         logger.info("添加的用户信息：{}",user.toString());  
     }  
-  
+
 @RequestMapping("/delete")  
 public void delete() {  
         userService.delete(4);  
     }  
-  
+
 @RequestMapping("/get/{id}")  
 public void get(@PathVariable("id") String idStr) throws Exception{  
 if (StringUtils.isBlank(idStr)) {  
@@ -256,6 +252,48 @@ thrownew Exception("id为空");
     }  
 }
 ```
+
+用缓存要注意，启动类要加上一个注解开启缓存：
+
+```java
+@SpringBootApplication(exclude=DataSourceAutoConfiguration.class)  
+@EnableCaching  
+public class Application {  
+  
+public static void main(String\[\] args) {  
+        SpringApplication.run(Application.class, args);  
+    }  
+  
+}
+```
+
+**缓存注解**
+
+**①@Cacheable**
+
+根据方法的请求参数对其结果进行缓存：
+
+* **Key：**
+  缓存的 Key，可以为空，如果指定要按照 SPEL 表达式编写，如果不指定，则按照方法的所有参数进行组合。
+* **Value：**
+  缓存的名称，必须指定至少一个（如 @Cacheable \(value='user'\)或者 @Cacheable\(value={'user1','user2'}\)）
+* **Condition：**
+  缓存的条件，可以为空，使用 SPEL 编写，返回 true 或者 false，只有为 true 才进行缓存。
+
+**②@CachePut**
+
+根据方法的请求参数对其结果进行缓存，和 @Cacheable 不同的是，它每次都会触发真实方法的调用。参数描述见上。
+
+**③@CacheEvict**
+
+根据条件对缓存进行清空：
+
+* Key：同上。
+* Value：同上。
+* Condition：同上。
+* allEntries：是否清空所有缓存内容，缺省为 false，如果指定为 true，则方法调用后将立即清空所有缓存。
+* **beforeInvocation：**
+  是否在方法执行前就清空，缺省为 false，如果指定为 true，则在方法还没有执行的时候就清空缓存。缺省情况下，如果方法执行抛出异常，则不会清空缓存
 
 
 
